@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -23,14 +23,14 @@ public class User {
     private int age;
     private String location;
 
-    @ElementCollection
-    private List<String> skills;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> skills;
 
-    @ElementCollection
-    private List<String> interests;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> interests;
 
-    @ElementCollection
-    private List<String> availability;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> availability;
 
     private String role; // e.g., "VOLUNTEER", "ADMIN"
 }

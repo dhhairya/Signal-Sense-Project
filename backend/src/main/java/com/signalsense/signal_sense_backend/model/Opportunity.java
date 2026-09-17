@@ -5,7 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "opportunities")
@@ -26,8 +26,8 @@ public class Opportunity {
     
     private String category;
     
-    @ElementCollection
-    private List<String> requiredSkills;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private Set<String> requiredSkills;
     
     private String location;
     

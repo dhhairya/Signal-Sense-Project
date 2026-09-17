@@ -13,6 +13,7 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
@@ -115,11 +116,11 @@ public class CliAppRunner implements CommandLineRunner {
         
         System.out.print("Skills (comma-separated): ");
         String skills = scanner.nextLine();
-        user.setSkills(Arrays.asList(skills.split(",")));
+        user.setSkills(new HashSet<>(Arrays.asList(skills.split(","))));
         
         System.out.print("Interests (comma-separated): ");
         String interests = scanner.nextLine();
-        user.setInterests(Arrays.asList(interests.split(",")));
+        user.setInterests(new HashSet<>(Arrays.asList(interests.split(","))));
         
         userRepository.save(user);
         System.out.println("Registration successful! You can now log in.");
@@ -271,7 +272,7 @@ public class CliAppRunner implements CommandLineRunner {
         
         System.out.print("Required Skills (comma-separated): ");
         String skills = scanner.nextLine();
-        opp.setRequiredSkills(Arrays.asList(skills.split(",")));
+        opp.setRequiredSkills(new HashSet<>(Arrays.asList(skills.split(","))));
         
         System.out.print("Location: ");
         opp.setLocation(scanner.nextLine());
