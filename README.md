@@ -1,160 +1,42 @@
-# Signal-Sense: Network Mapper
+# Signal-Sense: Volunteer Matching Platform (CLI Edition)
 
-> An AI-powered platform that intelligently connects volunteers with local community needs.
+## Overview of the project
+Signal-Sense is an AI-powered Command Line Interface (CLI) application that connects volunteers with local community needs. Organizations can post volunteering opportunities, while volunteers can create profiles with their skills and interests. A custom-built Java recommendation engine uses TF-IDF and Cosine Similarity to automatically match the best volunteers to the right opportunities.
 
-Signal-Sense is a two-sided platform built for the **Social Service Challenge (Intermediate Level)**. Organizations post volunteering opportunities, volunteers create profiles with their skills, interests, and availability, and a recommendation engine matches the two sides based on relevance, location, and schedule fit.
+## Features
+- **Dual Profile System** — Separate registration and login workflows for Volunteers and Organizations.
+- **Opportunity Management** — Organizations can post and track their opportunities.
+- **AI Recommendation Engine** — A content-based filtering algorithm built natively in Java that matches volunteers to opportunities based on skills and categories.
+- **Interactive CLI Interface** — Easy-to-navigate terminal menus for interacting with the platform.
 
----
+## Technologies/Tools Used
+- **Language**: Java 17
+- **Framework**: Spring Boot (Core, Data JPA)
+- **Database**: H2 In-Memory Database (for seamless execution without setup)
+- **Build Tool**: Maven
 
-## ✨ Features
-
-- **Dual Profile System** — separate, tailored profiles for volunteers (skills, interests, availability) and organizations (needs, location, schedule)
-- **AI Recommendation Engine** — content-based filtering (skills/interest similarity) with a roadmap to collaborative filtering as usage data grows
-- **Geo-Location Matching** — prioritizes and surfaces opportunities near the volunteer, with map-based browsing
-- **In-App Communication & Scheduling** — messaging, application status tracking, reminders, and calendar sync between volunteers and organizations
-- **Trust & Legitimacy Layer** — organization verification workflow and a reporting system to keep listings credible
-
----
-
-## 🧩 Problem It Solves
-
-Non-profits struggle to find the right volunteers at the right time, and volunteers struggle to find opportunities that actually fit their skills and schedules — leading to poor matches, no-shows, and burnout. Signal-Sense treats this as a **matching problem**, not just a listings board.
-
----
-
-## 🏗️ Tech Stack (Java-Only)
-
-| Layer | Tech |
-|---|---|
-| Backend & Frontend | Spring Boot (Spring MVC) + Thymeleaf server-rendered templates — one unified Java codebase |
-| Database | PostgreSQL + PostGIS (geo-queries), via Spring Data JPA / Hibernate Spatial |
-| Recommendation Engine | Java — Smile (ML library) or a custom TF-IDF/cosine-similarity `RecommendationService` |
-| Maps & Geo | Google Maps Services Java Client |
-| Auth | Spring Security + JJWT |
-| Notifications | JavaMail API (email), Firebase Admin SDK for Java (push), Twilio Java SDK (SMS, optional) |
-| Build Tool | Maven |
-| Hosting | Spring Boot executable JAR, deployed via Docker on Render/Railway/AWS |
-
----
-
-## 📂 Project Structure
-
-```
-signal-sense/
-├── src/
-│   ├── main/
-│   │   ├── java/com/signalsense/
-│   │   │   ├── controller/         # REST + MVC controllers
-│   │   │   ├── model/               # JPA entities (User, Organization, Opportunity, Application)
-│   │   │   ├── repository/          # Spring Data JPA repositories
-│   │   │   ├── service/
-│   │   │   │   ├── RecommendationService.java   # content-based (TF-IDF/cosine) engine
-│   │   │   │   └── GeoService.java              # geo-distance / PostGIS queries
-│   │   │   ├── security/            # Spring Security + JWT config
-│   │   │   └── SignalSenseApplication.java
-│   │   └── resources/
-│   │       ├── templates/           # Thymeleaf views
-│   │       ├── static/              # CSS/JS/images
-│   │       └── application.properties
-│   └── test/java/com/signalsense/    # unit & integration tests
-├── docs/
-│   └── PRD.md
-├── pom.xml
-└── README.md
-```
-
----
-
-## 🗄️ Data Model (High-Level)
-
-- **User (Volunteer)** — profile, skills[], interests[], availability[], location, history[]
-- **Organization** — profile, verification_status, location(s), ratings
-- **Opportunity** — org_id, title, required_skills[], category, location, schedule, slots_available
-- **Application** — user_id, opportunity_id, status, applied_at, completed_at, feedback
-- **Recommendation Log** — user_id, opportunity_id, score, shown_at, clicked
-
----
-
-## 🚀 Getting Started
+## Steps to install & run the project
 
 ### Prerequisites
-- JDK 17+
-- Maven 3.9+
-- PostgreSQL (with PostGIS extension)
+- Java 17+ installed
+- Maven installed
 
-### Installation
+### Run Instructions
+1. Clone this repository to your local machine.
+2. Navigate to the `backend/` directory in your terminal:
+   ```bash
+   cd backend
+   ```
+3. Run the Spring Boot application using Maven:
+   ```bash
+   mvn spring-boot:run
+   ```
+4. The application will start in your terminal and present the interactive Signal-Sense Main Menu.
 
-```bash
-# Clone the repo
-git clone https://github.com/<your-username>/signal-sense.git
-cd signal-sense
-
-# Install dependencies and build
-mvn clean install
-```
-
-### Environment Variables
-
-Set these in `src/main/resources/application.properties` (or as environment variables):
-
-```
-spring.datasource.url=jdbc:postgresql://localhost:5432/signalsense
-spring.datasource.username=your_db_username
-spring.datasource.password=your_db_password
-jwt.secret=your_jwt_secret
-maps.api.key=your_google_maps_api_key
-```
-
-### Running Locally
-
-```bash
-# Run the Spring Boot app (backend + frontend + recommendation engine, all in one)
-mvn spring-boot:run
-```
-
-The app will be available at `http://localhost:8080`.
-
----
-
-## 🧠 How the Recommendation Engine Works
-
-1. Volunteer and opportunity profiles are vectorized (skills + interests) using TF-IDF.
-2. Cosine similarity scores volunteer-opportunity pairs.
-3. Hard filters apply for geo-distance and schedule overlap.
-4. Top-N ranked opportunities are surfaced on the volunteer's dashboard.
-5. *(Phase 2)* Collaborative filtering layers in once enough interaction data (applications, completions, ratings) exists.
-
----
-
-## 🗺️ Roadmap
-
-- [ ] Auth + dual profile creation
-- [ ] Opportunity posting + geo-filtered browsing
-- [ ] Content-based recommendation engine (MVP)
-- [ ] Application flow + in-app messaging
-- [ ] Map view + notifications + feedback loop
-- [ ] Collaborative filtering (Phase 2)
-
----
-
-## 📊 Dataset
-
-Prototyping used the [Kaggle Volunteer Opportunities Dataset](https://www.kaggle.com/datasets/volunteermatch/volunteermatch-volunteer-opportunity-data) for initial EDA and recommendation-model testing before real platform data is available.
-
----
-
-## 📄 Documentation
-
-Full product requirements are in [`docs/PRD.md`](./docs/PRD.md).
-
----
-
-## 🤝 Contributing
-
-This is a hackathon/challenge submission. Pull requests and suggestions are welcome — open an issue to discuss changes before submitting a PR.
-
----
-
-## 📜 License
-
-MIT
+## Instructions for testing
+1. Start the application.
+2. Select `3` to Register as an Organization and follow the prompts.
+3. Select `4` to Login as the Organization you just created.
+4. Select `1` to Post a new Opportunity (add skills like "teaching" or "first aid").
+5. Log out and select `1` to Register as a Volunteer (add matching skills).
+6. Log in as the Volunteer and select `1` to View AI Recommendations. You should see the opportunity ranked based on similarity!
